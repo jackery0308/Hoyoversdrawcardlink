@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draw History Link</title>
+<meta name="description" content="Get your HoYoverse (Genshin, Star Rail, ZZZ) draw history link. No install needed.">
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #1b1f24; --muted: #5b6573;
+    --border: #dde1e6; --accent: #3b6fd8; --accent-text: #ffffff;
+    --code-bg: #eef1f5; --ok: #1f8a4c; --err: #c23b3b; --drop: #f0f4fc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111418; --card: #1a1e24; --text: #e6e9ed; --muted: #9aa4b1;
+      --border: #2c323a; --accent: #6c9bff; --accent-text: #0d1117;
+      --code-bg: #232932; --ok: #4cc47f; --err: #ff7b7b; --drop: #1d2533;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111418; --card: #1a1e24; --text: #e6e9ed; --muted: #9aa4b1;
+    --border: #2c323a; --accent: #6c9bff; --accent-text: #0d1117;
+    --code-bg: #232932; --ok: #4cc47f; --err: #ff7b7b; --drop: #1d2533;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  h2 { font-size: 1.1rem; margin: 0 0 12px; }
+  p.lead { color: var(--muted); margin: 0 0 24px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px; margin-bottom: 20px;
+  }
+  .tag { font-size: .75rem; color: var(--muted); font-weight: 500; margin-left: 6px; }
+  .seg { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .seg button {
+    flex: 1 1 auto; padding: 8px 12px; border-radius: 8px; cursor: pointer;
+    border: 1px solid var(--border); background: transparent; color: var(--text); font: inherit;
+  }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+  ol { padding-left: 20px; margin: 0 0 14px; }
+  li { margin-bottom: 6px; }
+  kbd {
+    font: .85em ui-monospace, SFMono-Regular, Consolas, monospace; padding: 1px 5px;
+    border: 1px solid var(--border); border-radius: 4px; background: var(--code-bg);
+  }
+  .code {
+    display: flex; align-items: stretch; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--code-bg); overflow: hidden;
+  }
+  .code code {
+    flex: 1; padding: 10px 12px; font: 13px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
+    overflow-wrap: anywhere; min-width: 0;
+  }
+  .code button, .btn {
+    border: 0; background: var(--accent); color: var(--accent-text); font: inherit; font-weight: 600;
+    padding: 0 16px; cursor: pointer; min-height: 40px;
+  }
+  .btn { border-radius: 8px; }
+  label.check { display: flex; gap: 8px; align-items: center; margin: 12px 0 0; color: var(--muted); }
+  .drop {
+    border: 2px dashed var(--border); border-radius: 10px; padding: 24px 16px; text-align: center;
+    background: var(--drop); cursor: pointer; color: var(--muted);
+  }
+  .drop.over { border-color: var(--accent); }
+  .path { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 13px; overflow-wrap: anywhere; }
+  #result { margin-top: 16px; }
+  #result .msg { margin: 0 0 8px; }
+  #result .msg.ok { color: var(--ok); } #result .msg.err { color: var(--err); }
+  .note { color: var(--muted); font-size: .9rem; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Draw History Link</h1>
+  <p class="lead">Get your Genshin Impact, Honkai: Star Rail or Zenless Zone Zero draw history link on Windows. Nothing to install.</p>
+
+  <div class="seg" role="group" aria-label="Game">
+    <button data-game="genshin" aria-pressed="true">Genshin Impact</button>
+    <button data-game="hsr" aria-pressed="false">Honkai: Star Rail</button>
+    <button data-game="zzz" aria-pressed="false">Zenless Zone Zero</button>
+  </div>
+
+  <section class="card">
+    <h2>Option 1: One command <span class="tag">recommended</span></h2>
+    <ol>
+      <li>In the game, open <b id="bannerName">Wish</b> &rarr; <b>History</b> and wait for the page to load.</li>
+      <li>Press <kbd>Win</kbd>, type <b>PowerShell</b>, press <kbd>Enter</kbd>.</li>
+      <li>Paste this command and press <kbd>Enter</kbd>. The link is copied to your clipboard.</li>
+    </ol>
+    <div class="code"><code id="cmd"></code><button data-copy="cmd">Copy</button></div>
+    <label class="check"><input type="checkbox" id="watch"> I'll open the history page after running the command (wait for it)</label>
+    <p class="note">The script only reads the game's cache on your PC and checks the link against HoYoverse's own API.
+      <a id="src" href="#">Read the script</a> before running it.</p>
+  </section>
+
+  <section class="card">
+    <h2>Option 2: Drop the cache file <span class="tag">no command</span></h2>
+    <ol>
+      <li>Open the history page in-game, then close the game if the file won't load.</li>
+      <li>Find this file (pick the newest version folder):<br>
+        <span class="path" id="cachePath"></span></li>
+      <li>Drop it below. It's read in your browser and never uploaded.</li>
+    </ol>
+    <div class="drop" id="drop" tabindex="0" role="button">Drop <b>data_2</b> here, or click to choose it</div>
+    <input type="file" id="file" hidden>
+    <div id="result" hidden>
+      <p class="msg" id="msg"></p>
+      <div class="code" id="linkBox"><code id="link"></code><button data-copy="link">Copy</button></div>
+    </div>
+  </section>
+
+  <p class="note">The link works like a password for your draw history for about 24 hours. Paste it only into tools you trust.
+    Source: <a href="https://github.com/jackery0308/Hoyoversdrawcardlink">github.com/jackery0308/Hoyoversdrawcardlink</a></p>
+</main>
+<script>
+  const SCRIPT = "https://raw.githubusercontent.com/jackery0308/Hoyoversdrawcardlink/HEAD/get_link.ps1";
+  const GAMES = {
+    genshin: { banner: "Wish", path: "<Genshin install folder>\\Genshin Impact game\\GenshinImpact_Data\\webCaches\\<version>\\Cache\\Cache_Data\\data_2" },
+    hsr: { banner: "Warp", path: "<Star Rail install folder>\\Game\\StarRail_Data\\webCaches\\<version>\\Cache\\Cache_Data\\data_2" },
+    zzz: { banner: "Signal Search", path: "<ZZZ install folder>\\ZenlessZoneZero_Data\\webCaches\\<version>\\Cache\\Cache_Data\\data_2" },
+  };
+  let game = "genshin";
+  try { game = localStorage.getItem("game") in GAMES ? localStorage.getItem("game") : game; } catch (e) {}
+
+  const $ = (id) => document.getElementById(id);
+  $("src").href = SCRIPT;
+
+  function render() {
+    document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.game === game));
+    const mode = $("watch").checked ? " -Mode watch" : "";
+    $("cmd").textContent = `& ([scriptblock]::Create((irm ${SCRIPT}))) -Game ${game}${mode}`;
+    $("bannerName").textContent = GAMES[game].banner;
+    $("cachePath").textContent = GAMES[game].path;
+  }
+  document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => {
+    game = b.dataset.game;
+    try { localStorage.setItem("game", game); } catch (e) {}
+    render();
+  }));
+  $("watch").addEventListener("change", render);
+
+  document.querySelectorAll("[data-copy]").forEach(b => b.addEventListener("click", async () => {
+    const text = $(b.dataset.copy).textContent;
+    try { await navigator.clipboard.writeText(text); b.textContent = "Copied"; }
+    catch (e) { b.textContent = "Select & copy"; }
+    setTimeout(() => (b.textContent = "Copy"), 1500);
+  }));
+
+  // Same logic as the scripts: last getGachaLog URL with an authkey, else last gacha page URL.
+  function extractLink(buffer) {
+    const text = new TextDecoder("latin1").decode(buffer);
+    const urls = (text.match(/https:\/\/[\x21-\x7e]+/g) || [])
+      .filter(u => u.includes("authkey=") && /gacha/i.test(u));
+    const api = urls.filter(u => u.includes("GachaLog"));
+    return api.length ? api[api.length - 1] : urls[urls.length - 1] || null;
+  }
+
+  function show(ok, message, link) {
+    $("result").hidden = false;
+    $("msg").textContent = message;
+    $("msg").className = "msg " + (ok ? "ok" : "err");
+    $("linkBox").hidden = !link;
+    $("link").textContent = link || "";
+  }
+
+  async function handle(file) {
+    if (!file) return;
+    try {
+      const link = extractLink(await file.arrayBuffer());
+      if (link) show(true, "Found your draw history link:", link);
+      else show(false, "No draw history link in this file. Open the history page in-game and try the newest data_2 again.");
+    } catch (e) {
+      show(false, "Couldn't read the file. Close the game and try again.");
+    }
+  }
+
+  const drop = $("drop");
+  drop.addEventListener("click", () => $("file").click());
+  drop.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("file").click(); } });
+  $("file").addEventListener("change", e => handle(e.target.files[0]));
+  drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("over"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("over"); handle(e.dataTransfer.files[0]); });
+
+  render();
+</script>
+</body>
+</html>

@@ -8,12 +8,36 @@ When the history page opens in-game, the game's built-in browser calls a GET API
 and prints the latest link. It doesn't touch the game process or send your data anywhere.
 The only network call is the optional `--validate` check, which goes to HoYoverse's own API.
 
-## Requirements
+## Quick start: no install
+
+Open **PowerShell** (press `Win`, type `PowerShell`, press `Enter`), paste this and press `Enter`:
+
+```powershell
+irm https://raw.githubusercontent.com/jackery0308/Hoyoversdrawcardlink/HEAD/get_link.ps1 | iex
+```
+
+A menu asks for the game and whether you've already opened the history page.
+To skip the menu, pass options instead:
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jackery0308/Hoyoversdrawcardlink/HEAD/get_link.ps1))) -Game hsr -Mode watch
+```
+
+Options: `-Game genshin|hsr|zzz`, `-Mode fetch|watch`, `-Path <game folder>`, `-Clean`, `-NoValidate`, `-NoCopy`.
+
+**Web page:** [`docs/index.html`](docs/index.html) gives these commands with copy buttons. It also has a
+fallback where you drop the `data_2` cache file onto the page; the file is read in your browser and never uploaded.
+To publish it, go to repo **Settings → Pages**, set Source to *Deploy from a branch*, pick the default branch and `/docs`.
+It will then be at `https://jackery0308.github.io/Hoyoversdrawcardlink/`.
+
+## Python version
+
+### Requirements
 
 - Windows with the game installed and started at least once
 - Python 3.9+ (standard library only, nothing to `pip install`)
 
-## Usage
+### Usage
 
 Double-click `run.bat` for a menu, or use the command line:
 
